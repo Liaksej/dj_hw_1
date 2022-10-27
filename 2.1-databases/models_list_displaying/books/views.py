@@ -17,19 +17,14 @@ def books_view(request):
 def books_date_pagin(request, pub_date):
     template = 'books/books_list.html'
     books_objects = Book.objects.filter(pub_date=pub_date)
-    date = Book.objects.values_list('pub_date').filter(pub_date=pub_date)
-    dates_list = Book.objects.all().values_list('pub_date').distinct().order_by('pub_date')
-    # index =
-    pagges = [next for next in dates_list]
-    previous_page = pagges[pagges.index(date[0]) - 1]
-    if previous_page == pagges[-1]:
-        previous_page = False
-    else:
-        previous_page = pagges[pagges.index(date[0]) - 1][0].strftime('%Y-%m-%d')
     try:
-        next_page = pagges[pagges.index(date[0]) + 1][0].strftime('%Y-%m-%d')
-    except IndexError:
-        next_page = False
+        next_page = Book.objects.all().filter(pub_date__gt=pub_date).values('pub_date').first()['pub_date'].strftime('%Y-%m-%d')
+    except TypeError:
+        next_page = None
+    try:
+        previous_page = Book.objects.all().filter(pub_date__lt=pub_date).values('pub_date').first()['pub_date'].strftime('%Y-%m-%d')
+    except TypeError:
+        previous_page = None
     context = {
         'books': books_objects,
         'next': next_page,
