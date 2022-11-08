@@ -11,7 +11,7 @@ class ScopeInlineFormset(BaseInlineFormSet):
         is_mains = []
         for form in self.forms:
             is_main = form.cleaned_data.get('is_main')
-            if is_main == 1:
+            if is_main is True:
                 is_mains.append(is_main)
         if len(is_mains) > 1:
             raise ValidationError('Основным тегом может быть только один тег')
