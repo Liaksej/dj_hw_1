@@ -15,7 +15,7 @@ class Command(BaseCommand):
             phones = list(csv.DictReader(file, delimiter=';'))
 
             for phone in phones:
-                phone_model = Phone(
+                Phone.objects.create(
                     name=phone['name'],
                     price=phone['price'],
                     image=phone['image'],
@@ -23,6 +23,5 @@ class Command(BaseCommand):
                     lte_exists=phone['lte_exists'],
                     slug=slugify(phone['name'])
                 )
-                phone_model.save()
 
                 self.stdout.write(self.style.SUCCESS('Successfully added phone "%s"' % phone['name']))
