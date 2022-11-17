@@ -1,6 +1,6 @@
 # примеры API-запросов
 
-@baseUrl = http://localhost:8000/api
+http://localhost:8000/api
 
 # получение датчиков
 GET {{baseUrl}}/sensors/
@@ -31,12 +31,24 @@ Content-Type: application/json
 
 # добавление измерения
 POST {{baseUrl}}/measurements/
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+--WebAppBoundary
+Content-Disposition: form-data; name="sensor"
 Content-Type: application/json
 
-{
-  "sensor": 1,
-  "temperature": 22.3
-}
+1
+--WebAppBoundary
+Content-Disposition: form-data; name="temperature"
+Content-Type: application/json
+
+22.3
+--WebAppBoundary
+Content-Disposition: form-data; name="photo"; filename="name_of_file.png"
+Content-Type: image/png
+
+< here add pass to the file to upload
+--WebAppBoundary--
 
 ###
 
