@@ -1,6 +1,7 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import request
 from rest_framework.filters import SearchFilter, BaseFilterBackend
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.viewsets import ModelViewSet
 
 
@@ -23,7 +24,6 @@ class ProductViewSet(ModelViewSet):
 class StockViewSet(ModelViewSet):
     queryset = Stock.objects.all().prefetch_related("positions")
     serializer_class = StockSerializer
-    # при необходимости добавьте параметры фильтрации
     filter_backends = [CustomSearchFilter]
     search_fields = [
         "positions__product__id",
