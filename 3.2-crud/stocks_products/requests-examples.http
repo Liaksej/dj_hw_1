@@ -8,8 +8,8 @@ POST {{baseUrl}}/products/
 Content-Type: application/json
 
 {
-  "title": "Кабачок",
-  "description": "Лучшие кабачки во вселенной"
+  "title": "Лимон",
+  "description": "Кислейший"
 }
 
 ###
@@ -64,20 +64,20 @@ Content-Type: application/json
 
 ###
 
-# обновляем записи на складе
-PATCH {{baseUrl}}/stocks/30/
+# создаем или обновляем записи на складе
+PATCH {{baseUrl}}/stocks/31/
 Content-Type: application/json
 
 {
   "positions": [
     {
-      "product": 4,
-      "quantity": 121,
+      "product": 3,
+      "quantity": 123,
       "price": 131.80
     },
     {
-      "product": 3,
-      "quantity": 243,
+      "product": 5,
+      "quantity": 246,
       "price": 145
     }
   ]
