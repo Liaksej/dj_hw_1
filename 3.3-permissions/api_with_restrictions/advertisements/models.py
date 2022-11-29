@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.db import models
+from django.contrib.auth.models import User
 
 
 class AdvertisementStatusChoices(models.TextChoices):
@@ -7,6 +8,7 @@ class AdvertisementStatusChoices(models.TextChoices):
 
     OPEN = "OPEN", "Открыто"
     CLOSED = "CLOSED", "Закрыто"
+    DRAFT = 'DRAFT', "Черновик"
 
 
 class Advertisement(models.Model):
@@ -28,3 +30,11 @@ class Advertisement(models.Model):
     updated_at = models.DateTimeField(
         auto_now=True
     )
+
+
+class Favorite(models.Model):
+    """Избранное."""
+
+    advertisement = models.ForeignKey(Advertisement, related_name='favorites', on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    favorite = models.BooleanField()
