@@ -41,10 +41,10 @@ class AdvertisementSerializer(serializers.ModelSerializer):
     def validate(self, data):
         """Метод для валидации. Вызывается при создании и обновлении."""
 
-        admin = self.context["request"].user.is_staff
         counting = Advertisement.objects.all().select_related('creator').filter(creator=self.context["request"].user,
                                                                                 status='OPEN').count()
-        if counting > 10 and not admin:
+        if counting > 10 and (self.context['request'].stream.method == 'POST' or ('status' in data
+                                                                                  and data['status'] == "OPEN")):
             raise ValidationError('Количество открытых объявлений превысило максимальное значение')
         return data
 
@@ -69,11 +69,10 @@ class FavoriteSerializer(serializers.ModelSerializer):
 
         check_fav_existing = Favorite.objects.all().filter(user=self.context["request"].user,
                                                            advertisement=data['advertisement'].id)
-        owner = Advertisement.objects.all().filter(creator=self.context["request"].user,
-                                                   id=data['advertisement'].id)
+        owner = data['advertisement'].creator
         if check_fav_existing:
             raise ValidationError('Уже добавлено в избранное ранее')
-        if owner:
+        if owner == self.context["request"].user:
             raise ValidationError('Вы не можете добавить в избранное свое объявление')
         return data
 
