@@ -56,11 +56,12 @@ class TestApp:
 
     def test_created_course(self, api_client):
         """Тест успешного создания курса"""
-
+        base_before = Course.objects.count()
         response = api_client.post('/api/v1/courses/',
                                    data={'name': 'Тестовый курс'})
 
         assert response.status_code == 201
+        assert base_before + 1 == Course.objects.count()
 
     def test_patch_course(self, api_client, courses_factory):
         """Тест успешного создания курса"""
