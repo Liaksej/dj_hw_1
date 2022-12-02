@@ -4,6 +4,7 @@ from rest_framework.test import APIClient
 from model_bakery import baker
 
 from students.models import Student, Course
+from students.serializers import CourseSerializer
 
 
 @pytest.fixture
@@ -32,7 +33,7 @@ class TestApp:
     """Все тесты, кроме тестов фильтрации (они вне класса ниже)"""
 
     def test_get_one_course(self, api_client, courses_factory):
-        """Проверка получения 1го курса (retrieve-логика)"""
+        """Проверка получения 1‑го курса (retrieve-логика)"""
 
         courses = courses_factory(make_m2m=True)
 
@@ -109,3 +110,14 @@ def test_filter_name(api_client, courses_factory):
 
     assert response.status_code == 200
     assert data[0]['name'] == courses[random_course.id - 1].name
+
+
+@pytest.mark.parametrize('parameter',
+                         [[x for x in range(5)], pytest.param([x for x in range(25)], marks=pytest.mark.xfail)])
+def test_max_students(parameter):
+    """Проверка максимального число студентов"""
+
+    data = {"students": parameter}
+    check = CourseSerializer().validate(data)
+
+    assert data == check
