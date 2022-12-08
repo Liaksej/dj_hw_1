@@ -35,13 +35,14 @@ class TestApp:
     def test_get_one_course(self, api_client, courses_factory):
         """Проверка получения 1‑го курса (retrieve-логика)"""
 
-        courses = courses_factory(make_m2m=True)
+        courses = courses_factory(_quantity=10, make_m2m=True)
 
-        response = api_client.get('/api/v1/courses/')
+        courses_id = [course.id for course in courses]
+        response = api_client.get(f'/api/v1/courses/{random.randint(1, 10)}/')
         data = response.json()
 
         assert response.status_code == 200
-        assert data[0]['id'] == courses.id
+        assert data['id'] in courses_id
 
     def test_get_list_courses(self, api_client, courses_factory):
         """Проверка получения списка курсов (list-логика)"""
@@ -91,7 +92,7 @@ def test_filter_id(api_client, courses_factory):
     courses = courses_factory(_quantity=list_large, make_m2m=True)
     random_course = random.choice(courses).id
 
-    response = api_client.get(f'/api/v1/courses/?id={random_course}')
+    response = api_client.get(f'/api/v1/courses/', {'id': random_course})
     data = response.json()
 
     assert response.status_code == 200
@@ -106,7 +107,7 @@ def test_filter_name(api_client, courses_factory):
     courses = courses_factory(_quantity=list_large, make_m2m=True)
     random_course = random.choice(courses)
 
-    response = api_client.get(f'/api/v1/courses/?name={random_course.name}')
+    response = api_client.get(f'/api/v1/courses/', {'name': random_course.name})
     data = response.json()
 
     assert response.status_code == 200
